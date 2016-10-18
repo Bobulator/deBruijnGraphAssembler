@@ -1,13 +1,13 @@
 import sys
 
-
 def read_fasta_file(input_file):
-    return ""
+    kmers = []
+    with open(input_file, 'r') as f:
+        for line in f:
+            if line[0] != '>':
+                kmers.append(line)
 
-
-def get_kmers(sequence, k):
-    return [sequence[i:k] for i in xrange(len(sequence) - k + 1)]
-
+    return kmers
 
 def build_de_bruijn_graph(kmers):
     graph = {}

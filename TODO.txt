@@ -1,13 +1,13 @@
 [ X ] Implement FASTA reading function
 [ ] Write tests
     [ ] example.data.fasta
-[ ] Run program on all 5 datasets
+[ ] Run program on all 5 datasets (Kevin and Chad)
     [ ] 48 reads w/ no errors
     [ ] 93 reads w/ no errors
     [ ] 779 reads w/ no errors
     [ ] 102 reads w/ errors
     [ ] 4675 reads w/ errors
-[ ] Analyze performance
+[ ] Analyze performance (Joseph)
     [ ] Choose metrics
     [ ] Metric #1
     [ ] Metric #2
@@ -16,7 +16,7 @@
     [ ] Choose 2 other assemblers
     [ ] Assembler #1
     [ ] Assembler #2
-[ ] BLAST data
+[ ] BLAST data (Shayla)
     [ ] real dataset #1
     [ ] real dataset #2
 [ ] Write report

@@ -1,12 +1,18 @@
 import sys
 
+def write_results(result_file, results):
+    if type(results) is list:
+        results = "\n".join(results)
+
+    with open(result_file, 'w') as f:
+        f.write(results)
 
 def read_fasta_file(input_file):
     kmers = []
     with open(input_file, 'r') as f:
         for line in f:
             if line[0] != '>':
-                kmers.append(line)
+                kmers.append(line.strip())
 
     return kmers
 
@@ -29,7 +35,7 @@ def build_de_bruijn_graph(kmers):
 def find_branching_nodes(graph):
     edge_counts = {}
 
-    for node, edges in graph.iteritems():
+    for node, edges in graph.items():
 
         if node not in edge_counts:
             edge_counts[node] = [0, 0]
@@ -41,7 +47,7 @@ def find_branching_nodes(graph):
                 edge_counts[edge] = [0, 0]
             edge_counts[edge][0] += 1
 
-    return [node for node, edges in edge_counts.iteritems() if not (edges[0] == 1 and edges[1] == 1)]
+    return [node for node, edges in edge_counts.items() if not (edges[0] == 1 and edges[1] == 1)]
 
 
 def generate_contigs(input_file):
@@ -70,4 +76,5 @@ def generate_contigs(input_file):
 
 
 if __name__ == "__main__":
-    generate_contigs(sys.argv[1])
+    c = generate_contigs(sys.argv[1])
+    write_results("tests\\result-output.txt", c)

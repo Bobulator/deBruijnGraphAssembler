@@ -42,9 +42,8 @@ def find_branching_nodes(graph):
     return [node for node, edges in edge_counts.iteritems() if not (edges[0] == 1 and edges[1] == 1)]
 
 
-def generate_contigs(input_file, k):
-    sequence = read_fasta_file(input_file)
-    kmers = get_kmers(sequence, k)
+def generate_contigs(input_file):
+    kmers = read_fasta_file(input_file)
     graph = build_de_bruijn_graph(kmers)
     branching_nodes = find_branching_nodes(graph)
 
@@ -69,4 +68,4 @@ def generate_contigs(input_file, k):
 
 
 if __name__ == "__main__":
-    generate_contigs(sys.argv[1], int(sys.argv[2]))
+    generate_contigs(sys.argv[1])

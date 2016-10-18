@@ -1,5 +1,6 @@
 import sys
 
+
 def read_fasta_file(input_file):
     kmers = []
     with open(input_file, 'r') as f:
@@ -8,6 +9,7 @@ def read_fasta_file(input_file):
                 kmers.append(line)
 
     return kmers
+
 
 def build_de_bruijn_graph(kmers):
     graph = {}

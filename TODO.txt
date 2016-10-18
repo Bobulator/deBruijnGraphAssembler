@@ -1,4 +1,4 @@
-[ ] Implement FASTA reading function
+[ X ] Implement FASTA reading function
 [ ] Write tests
     [ ] example.data.fasta
 [ ] Run program on all 5 datasets

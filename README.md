@@ -1,2 +1,1 @@
 # deBruijnGraphAssembler
-GET OUT.

@@ -20,3 +20,9 @@
     [ ] real dataset #1
     [ ] real dataset #2
 [ ] Write report
+
+
+
+
+QUESTIONS
+WHY CONTIGS??????? AND NOT E.PATH??????

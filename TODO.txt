@@ -1,4 +1,11 @@
 [ X ] Implement FASTA reading function
+[ ] Fix frequency function
+    [ ] consider how many reads a kmer appears instead of total number appearances
+[ ] "Setify" edges when generated exit edges
+[ ] Filter exit edges with low weights
+[ ] Possibly filter contig list by removing duplicates and subsets
+
+
 [ ] Write tests
     [ ] example.data.fasta
 [ ] Run program on all 5 datasets (Kevin and Chad)
@@ -25,4 +32,4 @@
 
 
 QUESTIONS
-WHY CONTIGS??????? AND NOT E.PATH??????
+

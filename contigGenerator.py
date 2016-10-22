@@ -83,9 +83,9 @@ def find_branching_nodes(graph):
     return [node for node, degrees in edge_counts.items() if not (degrees[0] == 1 and degrees[1] == 1)]
 
 
-def generate_contigs(input_file, k, weight_filter):
+def generate_contigs(input_file, k, coverage_filter, weight_filter):
     reads = read_fasta_file(input_file)
-    kmers = kmer_counts(reads, k)
+    kmers = kmer_counts(reads, k, coverage_filter)
     graph = build_weighted_de_bruijn_graph(kmers)
     graph = filter_weighted_de_bruijn_graph(weight_filter, graph)
     branching_nodes = find_branching_nodes(graph)
@@ -137,8 +137,6 @@ def assembleContigs(contigs, k):
 
 
 if __name__ == "__main__":
-    k = 68
-    weight_filter = 0
     #c = generate_eulerian_path(sys.argv[1])
-    c = generate_contigs(sys.argv[1], k, weight_filter)
+    c = generate_contigs(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4]))
     write_results("tests\\result-output.txt", c)

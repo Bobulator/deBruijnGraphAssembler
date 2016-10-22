@@ -8,6 +8,7 @@ def write_results(result_file, results):
     with open(result_file, 'w') as f:
         f.write(results)
 
+        
 def read_fasta_file(input_file):
     kmers = []
     with open(input_file, 'r') as f:
@@ -108,9 +109,8 @@ def generate_contigs(input_file, k, coverage_filter, weight_filter):
 
     contigs.sort()
     return list(set(contigs))
-    #return assembleContigs([list(x) for x in contigs], k)
 
-
+'''
 def assembleContigs(contigs, k):
 
     for kmer_size in xrange(k, 0, -1):
@@ -134,9 +134,9 @@ def assembleContigs(contigs, k):
                 len_changed = False
 
     return [''.join(x) for x in contigs]
+'''
 
 
 if __name__ == "__main__":
-    #c = generate_eulerian_path(sys.argv[1])
     c = generate_contigs(sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4]))
     write_results("tests\\result-output.txt", c)

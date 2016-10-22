@@ -36,7 +36,7 @@ def kmer_counts(reads, k, threshold=0):
     return results
 
 
-def build_de_bruijn_graph(kmers):
+def build_weighted_de_bruijn_graph(kmers):
     graph = {}
 
     for kmer in kmers:
@@ -44,9 +44,23 @@ def build_de_bruijn_graph(kmers):
         suffix = kmer[1:]
 
         if prefix not in graph:
-            graph[prefix] = []
+            graph[prefix] = {}
 
-        graph[prefix].append(suffix)
+        if suffix not in graph[prefix]:
+            graph[prefix][suffix] = 0
+
+        graph[prefix][suffix] += 1
+
+    return graph
+
+
+def filter_weighted_de_bruijn_graph(filter, graph):
+    for node, weighted_edges in graph.items():
+        for edge, weight in weighted_edges.items():
+            if weight <= filter:
+                weighted_edges.pop(edge)
+
+        graph[node] = list(weighted_edges.keys())
 
     return graph
 
@@ -69,10 +83,11 @@ def find_branching_nodes(graph):
     return [node for node, degrees in edge_counts.items() if not (degrees[0] == 1 and degrees[1] == 1)]
 
 
-def generate_contigs(input_file, k):
+def generate_contigs(input_file, k, weight_filter):
     reads = read_fasta_file(input_file)
     kmers = kmer_counts(reads, k)
-    graph = build_de_bruijn_graph(kmers)
+    graph = build_weighted_de_bruijn_graph(kmers)
+    graph = filter_weighted_de_bruijn_graph(weight_filter, graph)
     branching_nodes = find_branching_nodes(graph)
 
     contigs = []
@@ -123,6 +138,7 @@ def assembleContigs(contigs, k):
 
 if __name__ == "__main__":
     k = 68
+    weight_filter = 0
     #c = generate_eulerian_path(sys.argv[1])
-    c = generate_contigs(sys.argv[1], k)
+    c = generate_contigs(sys.argv[1], k, weight_filter)
     write_results("tests\\result-output.txt", c)

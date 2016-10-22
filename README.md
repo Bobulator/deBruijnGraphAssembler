@@ -11,3 +11,5 @@ For example:
 Note that on Unix machines you would use '/' instead of '\' for the directory. Also note how I used a coverage filter and a weighted edge filter of 0; because the example.data.fasta file has no reads there is no need to filter any kmers/edges.
 
 **Remember that the kmer size MUST be less than or equal to the read size otherwise the output will be empty!**
+
+The output can be find in the result-output.txt file in the tests folder.

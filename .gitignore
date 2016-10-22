@@ -1,0 +1,5 @@
+# JetBrains PyCharm
+.idea/
+
+# Program output
+tests/result-output.txt

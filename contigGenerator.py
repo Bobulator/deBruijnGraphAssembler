@@ -141,11 +141,8 @@ def find_branching_nodes(graph):
 def generate_contigs(input_file, k, coverage_filter, weight_filter):
     reads = read_fasta_file(input_file)
     kmers = kmer_counts(reads, k, coverage_filter)
-    print kmers
     graph = build_weighted_de_bruijn_graph(kmers)
-    print graph
     graph = filter_weighted_de_bruijn_graph(weight_filter, graph)
-    print graph
     branching_nodes = find_branching_nodes(graph)
 
     contigs = []

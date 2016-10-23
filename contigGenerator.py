@@ -12,29 +12,30 @@ def calculateMedianContigSize(contigs):
 
 
 def calculateN50(contigs):
-        contigs.sort(key=len, reverse=True)
-
         total_len_of_contigs = 0
         for contig in contigs:
             total_len_of_contigs += len(contig)
 
         halfway = total_len_of_contigs / 2
 
-        for contig in contigs:
+        for i in range(0, len(contigs)):
+            contig = contigs[i]
             if halfway - len(contig) <= 0:
                 return len(contig)
 
-        raise Exception('Did not find an N50 value')
+            halfway -= len(contig)
+
+        return -1
 
 
 
-def write_results(result_file, num_contigs, median_contig_size, n50, results):
+def write_results(result_file, longest_contig_length, median_contig_size, n50, results):
     if type(results) is list:
         results = "\n".join(results)
 
     with open(result_file, 'w') as f:
         f.write("***** STATISTICS *****\n")
-        f.write("\tNumber of contigs: " + str(num_contigs) + "\n")
+        f.write("\tLongest contig length: " + str(longest_contig_length) + "\n")
         f.write("\tMedian contig size: " + str(median_contig_size) + "\n")
         f.write("\tN50: " + str(n50) + "\n")
         f.write("\n\n\n")
@@ -170,18 +171,32 @@ def assembleContigs(contigs, k):
 '''
 
 
+def convertNumberToString(num):
+    s = ""
+    if num < 10:
+        s += "0"
+    s += str(num)
+    return s
+
+
 if __name__ == "__main__":
     filename = sys.argv[1]
-    filename_only = sys.argv[1].split("\\")[1]
+    filename_only = sys.argv[1].split("/")[1]
     kmer_len = int(sys.argv[2])
     coverage_filter = int(sys.argv[3])
     weighted_edge_filter = int(sys.argv[4])
 
-    # Calcuate the contigs
+    # Calculate the contigs
     c = generate_contigs(filename, kmer_len, coverage_filter, weighted_edge_filter)
 
-    # Calculate number of contigs
-    num_contigs = len(set(c))
+    # Sort contigs first
+    c.sort(key=len, reverse=True)
+
+    if len(c) == 0:
+        raise Exception("No contigs were found")
+
+    # Calculate length of longest contig
+    longest_contig_length = len(c[0])
 
     # Calculate median contig size
     median_contig_size = calculateMedianContigSize(c)
@@ -189,5 +204,5 @@ if __name__ == "__main__":
     # Calculate N50
     n50 = calculateN50(c)
 
-    output_file = "output\\" + filename_only + "-"  + str(kmer_len) + "-" + str(coverage_filter) + "-" + str(weighted_edge_filter) + ".txt"
-    write_results(output_file, num_contigs, median_contig_size, n50, c)
+    output_file = "output\\" + filename_only + "-" + convertNumberToString(kmer_len) + "-" + convertNumberToString(coverage_filter) + "-" + convertNumberToString(weighted_edge_filter) + ".txt"
+    write_results(output_file, longest_contig_length, median_contig_size, n50, c)

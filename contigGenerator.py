@@ -1,5 +1,15 @@
 import numpy
 import sys
+import os
+import errno
+
+
+def convert_number_to_string(num):
+    s = ""
+    if num < 10:
+        s += "0"
+    s += str(num)
+    return s
 
 
 def calculate_median_contig_size(contigs):
@@ -31,6 +41,13 @@ def calculateN50(contigs):
 def write_results(result_file, longest_contig_length, median_contig_size, n50, results):
     if type(results) is list:
         results = "\n".join(results)
+
+    if not os.path.exists(os.path.dirname(result_file)):
+        try:
+            os.makedirs(os.path.dirname(result_file))
+        except OSError as exc:  # Guard against race condition
+            if exc.errno != errno.EEXIST:
+                raise
 
     with open(result_file, 'w') as f:
         f.write("***** STATISTICS *****\n")
@@ -143,6 +160,28 @@ def generate_contigs(input_file, k, coverage_filter, weight_filter):
     contigs.sort()
     return list(set(contigs))
 
+
+def generate_output(contigs, k, coverage_filter, weighted_edge_filter):
+    # Sort contigs first
+    contigs.sort(key=len, reverse=True)
+
+    if len(contigs) == 0:
+        raise Exception("No contigs were found")
+
+    # Calculate length of longest contig
+    longest_contig_length = len(contigs[0])
+
+    # Calculate median contig size
+    median_contig_size = calculate_median_contig_size(contigs)
+
+    # Calculate N50
+    n50 = calculateN50(contigs)
+
+    output_file = "output\\" + filename_only + "-" + convert_number_to_string(
+        kmer_len) + "-" + convert_number_to_string(coverage_filter) + "-" + convert_number_to_string(
+        weighted_edge_filter) + ".txt"
+    write_results(output_file, longest_contig_length, median_contig_size, n50, contigs)
+
 '''
 def assembleContigs(contigs, k):
 
@@ -170,38 +209,14 @@ def assembleContigs(contigs, k):
 '''
 
 
-def convert_number_to_string(num):
-    s = ""
-    if num < 10:
-        s += "0"
-    s += str(num)
-    return s
-
-
 if __name__ == "__main__":
     filename = sys.argv[1]
-    filename_only = filename.split("/")[1]
+    filename_only = filename.split(os.sep)[-1]
     kmer_len = int(sys.argv[2])
     coverage_filter = int(sys.argv[3])
     weighted_edge_filter = int(sys.argv[4])
 
     # Calculate the contigs
-    c = generate_contigs(filename, kmer_len, coverage_filter, weighted_edge_filter)
+    contigs = generate_contigs(filename, kmer_len, coverage_filter, weighted_edge_filter)
+    generate_output(contigs, kmer_len, coverage_filter, weighted_edge_filter)
 
-    # Sort contigs first
-    c.sort(key=len, reverse=True)
-
-    if len(c) == 0:
-        raise Exception("No contigs were found")
-
-    # Calculate length of longest contig
-    longest_contig_length = len(c[0])
-
-    # Calculate median contig size
-    median_contig_size = calculate_median_contig_size(c)
-
-    # Calculate N50
-    n50 = calculateN50(c)
-
-    output_file = "output\\" + filename_only + "-" + convert_number_to_string(kmer_len) + "-" + convert_number_to_string(coverage_filter) + "-" + convert_number_to_string(weighted_edge_filter) + ".txt"
-    write_results(output_file, longest_contig_length, median_contig_size, n50, c)

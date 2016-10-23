@@ -70,19 +70,23 @@ def read_fasta_file(input_file):
 
 
 def kmer_counts(reads, k, threshold=0):
-    kmer_occurence_read_indices = {}
+    kmer_occurence_per_read = {}
 
     for index, read in enumerate(reads):
         for kmer in [read[i:i + k] for i in xrange(len(read) - k + 1)]:
-            if kmer not in kmer_occurence_read_indices:
-                kmer_occurence_read_indices[kmer] = set()
+            if kmer not in kmer_occurence_per_read:
+                kmer_occurence_per_read[kmer] = {}
 
-            kmer_occurence_read_indices[kmer].add(index)
+            if index not in kmer_occurence_per_read[kmer]:
+                kmer_occurence_per_read[kmer][index] = 0
+
+            kmer_occurence_per_read[kmer][index] += 1
 
     results = []
-    for kmer, read_indices in kmer_occurence_read_indices.iteritems():
-        if len(read_indices) >= threshold:
-            results.append(kmer)
+    for kmer, occurence_per_read in kmer_occurence_per_read.iteritems():
+        if len(occurence_per_read) >= threshold:
+            for _, count in kmer_occurence_per_read[kmer].iteritems():
+                results.append(kmer)
 
     return results
 
@@ -137,8 +141,11 @@ def find_branching_nodes(graph):
 def generate_contigs(input_file, k, coverage_filter, weight_filter):
     reads = read_fasta_file(input_file)
     kmers = kmer_counts(reads, k, coverage_filter)
+    print kmers
     graph = build_weighted_de_bruijn_graph(kmers)
+    print graph
     graph = filter_weighted_de_bruijn_graph(weight_filter, graph)
+    print graph
     branching_nodes = find_branching_nodes(graph)
 
     contigs = []

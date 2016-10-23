@@ -2,7 +2,7 @@ import numpy
 import sys
 
 
-def calculateMedianContigSize(contigs):
+def calculate_median_contig_size(contigs):
     contig_lengths = []
 
     for contig in contigs:
@@ -26,7 +26,6 @@ def calculateN50(contigs):
             halfway -= len(contig)
 
         return -1
-
 
 
 def write_results(result_file, longest_contig_length, median_contig_size, n50, results):
@@ -171,7 +170,7 @@ def assembleContigs(contigs, k):
 '''
 
 
-def convertNumberToString(num):
+def convert_number_to_string(num):
     s = ""
     if num < 10:
         s += "0"
@@ -181,7 +180,7 @@ def convertNumberToString(num):
 
 if __name__ == "__main__":
     filename = sys.argv[1]
-    filename_only = sys.argv[1].split("/")[1]
+    filename_only = filename.split("/")[1]
     kmer_len = int(sys.argv[2])
     coverage_filter = int(sys.argv[3])
     weighted_edge_filter = int(sys.argv[4])
@@ -199,10 +198,10 @@ if __name__ == "__main__":
     longest_contig_length = len(c[0])
 
     # Calculate median contig size
-    median_contig_size = calculateMedianContigSize(c)
+    median_contig_size = calculate_median_contig_size(c)
 
     # Calculate N50
     n50 = calculateN50(c)
 
-    output_file = "output\\" + filename_only + "-" + convertNumberToString(kmer_len) + "-" + convertNumberToString(coverage_filter) + "-" + convertNumberToString(weighted_edge_filter) + ".txt"
+    output_file = "output\\" + filename_only + "-" + convert_number_to_string(kmer_len) + "-" + convert_number_to_string(coverage_filter) + "-" + convert_number_to_string(weighted_edge_filter) + ".txt"
     write_results(output_file, longest_contig_length, median_contig_size, n50, c)

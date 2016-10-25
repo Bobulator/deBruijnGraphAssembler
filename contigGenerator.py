@@ -86,7 +86,8 @@ def kmer_counts(reads, k, threshold=0):
     for kmer, occurence_per_read in kmer_occurence_per_read.iteritems():
         if len(occurence_per_read) >= threshold:
             for _, count in kmer_occurence_per_read[kmer].iteritems():
-                results.append(kmer)
+                for c in xrange(count):
+                    results.append(kmer)
 
     return results
 
